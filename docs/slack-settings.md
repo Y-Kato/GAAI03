@@ -88,6 +88,8 @@ Pick a workspace: [あなたのワークスペースを選択]
    - Scope: `connections:write` を選択
    - **「Generate」ボタンをクリック**
 3. **表示される App-Level Token（`xapp-...`）をコピーして保存**
+※ 「Generate an app-level token to enable Socket Mode」セクションがない場合、作成済みの可能性がある。
+※ 「Basic Information」の下の方にある App-Level Tokens で確認できる。
 
 ---
 
@@ -147,28 +149,47 @@ PROJECT_DIR=/workspace
 
 ## 🧪 Step 8: システム起動とテスト
 
-### 8. SlackListener 動作確認
+### 8. SlackListener の起動と接続確認
 
-仮想環境をアクティブにした上で、SlackListener と Executor の初期化テストを実行します。
-
-```bash
-codex test-components
-```
-
-両コンポーネントとも `OK` が出力されれば、Slack からのメンション受信・コマンド実行の準備が整っています。
-
-あとは Slack 上で:
+プロセスとして SlackListener を常駐起動し、Socket Mode 経由でイベント受信ができているかを確認します。
 
 ```bash
-@AI Command Agent <タスク内容>
+# 仮想環境を有効化
+source .venv/bin/activate
+
+# デバッグログを有効にしてリスナーを起動
+python3 - << 'EOF'
+import logging
+from codex_cli.slack_plugin import SlackListener
+
+logging.basicConfig(level=logging.INFO)
+listener = SlackListener()
+listener.start()
+EOF
 ```
 
-を投げるだけで、自動的にタスク計画・実行・結果通知のワークフローが実行されます。
+起動すると以下のようなログが表示され、Socket Mode 接続が確立されます：
 
-**期待する動作：**
-1. 受付確認メッセージ
-2. タスク分析・計画の実行
-3. 結果報告
+```
+INFO slack_bolt.App:⚡️ Bolt app is running!
+INFO slack_bolt.App:Starting to receive messages from a new connection (session id: ...)
+```
+
+また Slack 管理画面の**Socket Mode**セクションでも「Connected」になっていることを確認してください。
+
+### 9. メンション / DM テスト
+
+Bot にメンションまたはダイレクトメッセージを送信し、受信＆応答を確認します。
+
+```bash
+@AI Command Agent Hello
+```
+
+応答例：
+
+```
+<@U...> received: Hello
+```
 
 ---
 
