@@ -1,46 +1,66 @@
-# OpenAI Codex CLI Plugin
+# openai-codex-cli
 
-This package provides a `codex` subcommand for the OpenAI CLI, implementing the following commands:
+AIコマンドエージェントをローカル CLI から操作するための Python プラグインです。タスク分解 → コマンド実行 → フェーズ管理の一連ワークフローを自動化し、
+Slack や Docker の環境チェックもサポートします。
 
-- `openai codex health-check`: System health check (Slack, Docker connectivity).
-- `openai codex test-components`: Component self-test (Slack listener, Executor).
-- `openai codex plan`: Decompose a task into execution phases (generate plan JSON).
-- `openai codex execute`: Execute a plan JSON and collect results.
+## 主な特徴
 
-## Installation
+- **health-check** : Slack トークンおよび Docker 接続のヘルスチェック
+- **test-components** : SlackListener／Executor のセルフテスト
+- **plan** : GPT-4 を使いタスクサマリを実行フェーズに分解し、計画 JSON を生成
+- **execute** : 生成されたプラン JSON に従いシェルコマンドを順次実行して結果を保存
+
+## インストール
+
+### PyPI からインストール
+```bash
+pip install openai-codex-cli
+```
+
+### ソースからインストール
+```bash
+git clone https://github.com/your-org/openai-codex-cli.git
+cd openai-codex-cli
+pip install .
+```
+
+## 環境変数設定
+
+動作に必要な環境変数を設定してください（または `.env` ファイルに記載して読み込む）。
+
+| 変数             | 説明                             |
+|------------------|----------------------------------|
+| OPENAI_API_KEY   | OpenAI API キー                  |
+| SLACK_BOT_TOKEN  | Slack Bot トークン (`xoxb-…`)    |
+| SLACK_APP_TOKEN  | Slack App トークン (`xapp-…`)    |
+| PROJECT_PATH     | プロジェクトルート（prompts 配置先）|
 
 ```bash
-# (Optional) 仮想環境作成・有効化（プロジェクトごとに環境を分離）
-# Debian/Ubuntu 系でエラーが出る場合:
-#   sudo apt update && sudo apt install python3-venv
-python3 -m venv .venv
-source .venv/bin/activate
-
-# pip, setuptools, wheel を最新化
-pip install --upgrade pip setuptools wheel
-
-# 本パッケージをインストール
-pip install .
-
-# 環境変数を設定（または .env に記述して source してください）
 export OPENAI_API_KEY="your_openai_api_key"
 export SLACK_BOT_TOKEN="xoxb-..."
 export SLACK_APP_TOKEN="xapp-..."
 export PROJECT_PATH="/path/to/your/project"
 ```
 
-## Usage
+## 使い方
 
 ```bash
-# Health check
-codex health-check
-
-# Component test
-codex test-components
-
-# Plan generation
-codex plan --task-summary @task_summary.json --output @plan.json
-
-# Plan execution
-codex execute --plan @plan.json --output @results.json
+codex health-check                                         # システムヘルスチェック
+codex test-components                                      # コンポーネントテスト
+codex plan --task-summary @task_summary.json --output @plan.json   # プラン生成
+codex execute --plan @plan.json --output @results.json             # プラン実行
 ```
+
+## 詳細ドキュメント
+
+各種設定やセキュリティ設計、API 仕様などの詳細は `docs/` 配下のドキュメントをご覧ください。
+
+- docs/API-specification.md
+- docs/slack-settings.md
+- docs/security-design.md
+- docs/task-execution-flow-design.md
+- docs/future-improvements.md
+
+## ライセンス
+
+MIT
