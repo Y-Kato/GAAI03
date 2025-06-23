@@ -37,14 +37,15 @@ Pick a workspace: [あなたのワークスペースを選択]
 
 **必須スコープ（順番にクリックして追加）：**
 
-1. `app_mentions:read` - アプリへのメンション読み取り
-2. `chat:write` - メッセージ送信
-3. `chat:write.public` - パブリックチャンネルへの投稿
-4. `channels:read` - チャンネル情報読み取り
-5. `im:read` - DMメッセージ読み取り
-6. `im:write` - DMメッセージ送信
-7. `im:history` - DM履歴読み取り
-8. `users:read` - ユーザー情報読み取り
+1. `app_mentions:read`   - @メンション受信
+2. `chat:write`          - メッセージ送信
+3. `chat:write.public`   - パブリックチャンネル投稿
+4. `chat:write:bot`      - Botとしてメッセージ送信
+5. `channels:read`       - パブリックチャンネル閲覧
+6. `im:read`             - DMメッセージ閲覧
+7. `im:write`            - DMメッセージ送信
+8. `im:history`          - DM履歴閲覧
+9. `users:read`          - ユーザー情報閲覧
 
 ### 2.3 ワークスペースへのインストール
 
