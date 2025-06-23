@@ -177,16 +177,13 @@ codex test-components
 ### 問題1: 「アプリが応答しない」
 
 **確認事項：**
-- [ ] Socket Modeが有効になっている
-- [ ] `SLACK_APP_TOKEN`が正しく設定されている
-- [ ] システムが起動している（`make logs`でログ確認）
+- [ ] Socket Mode が有効になっている
+- [ ] `SLACK_APP_TOKEN` が正しく設定されている
+- [ ] `codex test-components` で SlackListener／Executor のセルフテストが OK になっている
 
 **解決方法：**
 ```bash
-# システム再起動
-make down
-make up
-make logs
+codex test-components
 ```
 
 ### 問題2: 「権限エラー」
@@ -203,16 +200,12 @@ make logs
 ### 問題3: 「タスクが実行されない」
 
 **確認事項：**
-- [ ] OpenAI APIキーが設定されている
-- [ ] Dockerが正常に動作している
-- [ ] プロジェクトディレクトリのマウントが正しい
+- [ ] `OPENAI_API_KEY` が設定されている
+- [ ] プランファイル (`plan.json`) の `domain_phases[*].exec` が正しく命令を含んでいる
 
 **デバッグ方法：**
 ```bash
-# ヘルスチェック
 codex health-check
-
-# コンポーネントテスト
 codex test-components
 ```
 
