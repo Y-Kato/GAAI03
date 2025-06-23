@@ -4,7 +4,7 @@
 
 ## システム概要
 
-本システムは、Slackインターフェースを通じてユーザーからタスクを受け取り、AI（Claude/GPT）が自律的にタスク分解・計画立案・実行・評価を行う自己完結型エージェントシステムです。
+本システムは、Slackインターフェースを通じてユーザーからタスクを受け取り、AI（OpenAI API）によるタスク分解・計画立案・実行・評価を行う自己完結型エージェントシステムです。
 
 ---
 
@@ -16,7 +16,7 @@
 | ------------ | ----------------------------------------------------------------- |
 | UI           | Slack（チャットUI兼メッセージ中継）                               |
 | AIエンジン   | AI API（function callingを活用）                                  |
-| エージェント | Python + Slack Bolt + Executor構成（AI による実行を担う自律主体） |
+| エージェント | OpenAI CLI + Executorプラグイン構成（AI による実行を担う自律主体） |
 | 中継通信     | SLack の Socket mode（ローカル → Slack）                          |
 | 実行環境     | WSL2 + Docker Compose（Ubuntuベース）                             |
 | 履歴管理     | JSON形式でのタスク設計／結果ログをそのまま保存                    |
@@ -142,17 +142,17 @@ sequenceDiagram
 
 ## 🧹 モジュール構成
 
-### 1. Slack連携ボット
+### 1. Slackインターフェースプラグイン
 
-* Slack Appを作成し、OAuthスコープ（app\_mentions\:read, chat\:writeなど）を設定
-* Socket Mode対応で `xoxb-...`, `xapp-...` トークンを用いる
-* `slack-agent/app.py` にて `slack_bolt.App` を起動し、メンションイベントに反応
+* OpenAI CLIプラグインとして実装し、Slack Appを通じてユーザーからのメッセージを受信
+* Slack AppではOAuthスコープ（app_mentions:read、chat:writeなど）を設定し、Socket Modeでイベントを受け取る
+* CLIプラグインがSlackイベントをトリガーし、タスクをコマンドとして処理
 
-### 2. 実行クライアント（executor\_client.py）
+### 2. Executorプラグイン
 
-* メッセージからタスク解釈 → AI API に送信 → コマンドを生成
-* 実行コマンドがあれば `os.popen()` 経由で実行し、その結果をSlackへ返信
-* 開発時は `eval()` 使用だが、本番では `json.loads()` 推奨
+* OpenAI CLIプラグインとして実装し、AIから生成されたコマンドを実行
+* コマンドはシェルで実行し、標準出力および標準エラーをキャプチャ
+* 実行結果をCLIプラグイン経由でAIプランナーにフィードバック
 
 ### 3. Docker環境
 

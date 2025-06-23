@@ -236,17 +236,17 @@ make logs
 ### 問題3: 「タスクが実行されない」
 
 **確認事項：**
-- [ ] AI APIキー（Claude/OpenAI）が設定されている
+- [ ] OpenAI APIキーが設定されている
 - [ ] Dockerが正常に動作している
 - [ ] プロジェクトディレクトリのマウントが正しい
 
 **デバッグ方法：**
 ```bash
-# ヘルスチェック実行
-python scripts/health_check.py
+# ヘルスチェック
+codex health-check
 
 # コンポーネントテスト
-python scripts/test_components.py
+codex test-components
 ```
 
 ### 問題4: 「Socket Mode接続エラー」
