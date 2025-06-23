@@ -147,56 +147,23 @@ PROJECT_DIR=/workspace
 
 ## 🧪 Step 8: システム起動とテスト
 
-### 8.1 システムの起動
+### 8. SlackListener 動作確認
+
+仮想環境をアクティブにした上で、SlackListener と Executor の初期化テストを実行します。
 
 ```bash
-# 1. Dockerイメージのビルド
-make build
-
-# 2. システム起動
-make up
-
-# 3. ログ確認
-make logs
+codex test-components
 ```
 
-### 8.2 接続確認
+両コンポーネントとも `OK` が出力されれば、Slack からのメンション受信・コマンド実行の準備が整っています。
 
-ログに以下が表示されればSocket Mode接続成功：
+あとは Slack 上で:
 
-```
-INFO - AI Command Agent is running and ready to receive tasks!
-INFO - Socket Mode connection established
-```
-
-### 8.3 動作テスト
-
-#### テスト1: メンションテスト
-
-Slackの任意のチャンネルで：
-
-```
-@AI Command Agent Hello
+```bash
+@AI Command Agent <タスク内容>
 ```
 
-**期待する応答：**
-```
-🤖 タスクを受け付けました。分析・計画を開始します...
-```
-
-#### テスト2: ダイレクトメッセージテスト
-
-AI Command Agentにダイレクトメッセージを送信：
-
-```
-Hello AI Agent
-```
-
-#### テスト3: 実際のタスクテスト
-
-```
-@AI Command Agent Pythonで簡単なHello Worldファイルを作成して実行してください
-```
+を投げるだけで、自動的にタスク計画・実行・結果通知のワークフローが実行されます。
 
 **期待する動作：**
 1. 受付確認メッセージ
